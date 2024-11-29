@@ -2,16 +2,15 @@ package cmd
 
 import (
 	"apm-trace-worker-example/db"
+	"apm-trace-worker-example/dependencies"
 	"apm-trace-worker-example/env"
-	"database/sql"
-
-	"github.com/sirupsen/logrus"
+	"apm-trace-worker-example/interfaces"
+	"context"
+	"fmt"
 )
 
 type Worker struct {
-	productUseCase string
-	repository     string
-	dbConn         *sql.DB
+	productUseCase interfaces.ProductUseCase
 }
 
 func NewWorker() *Worker {
@@ -22,11 +21,11 @@ func (wk *Worker) BootStrap() error {
 	env.LoadEnvs()
 	err := wk.DbConnInit()
 	if err != nil {
-		logrus.Error("Erro ao iniciar conexão com banco de dados")
+		fmt.Println("Erro ao iniciar conexão com banco de dados")
 		return err
 	}
 
-	logrus.Info("Conexão iniciada com sucesso!")
+	fmt.Println("Conexão iniciada com sucesso!")
 	return nil
 }
 
@@ -40,4 +39,17 @@ func (wk *Worker) DbConnInit() error {
 	return nil
 }
 
-func (wk *Worker) Exec() {}
+func (wk *Worker) InitiInternalModules() {
+	wk.productUseCase = dependencies.GetProductUseCase()
+}
+
+func (wk *Worker) Exec() {
+	ctx := context.Background()
+	products, err := wk.productUseCase.GetProducts(ctx)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(products)
+}

@@ -21,7 +21,7 @@ func ConnectDB() error {
 	config := fmt.Sprintf("server=%s;port=%s;database=%s;trusted_connection=yes", server, port, table)
 	fmt.Println(config)
 
-	sqltrace.Register(env.DB_KIND, &sqlserver.Driver{}, sqltrace.WithServiceName("apm-trace-example-with-gorilla-mux-db"), sqltrace.WithAnalytics(true))
+	sqltrace.Register(env.DB_KIND, &sqlserver.Driver{}, sqltrace.WithServiceName("apm-trace-worker-example-db"), sqltrace.WithAnalytics(true))
 
 	db, err := sqltrace.Open(env.DB_KIND, config)
 
