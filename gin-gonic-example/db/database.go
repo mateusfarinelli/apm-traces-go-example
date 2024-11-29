@@ -10,15 +10,15 @@ import (
 )
 
 const (
-	server     = "DESKTOP-46TK3U5"
-	port     = "1433"
-	table = "product"
+	server = "localhost"
+	port   = "1433"
+	table  = "product"
 )
 
 var Conn *sql.DB
 
-func ConnectDB() (error) {
-	config := fmt.Sprintf("server=%s;port=%s;database=%s;trusted_connection=yes", server, port, table);
+func ConnectDB() error {
+	config := fmt.Sprintf("server=%s;port=%s;database=%s;trusted_connection=yes", server, port, table)
 	fmt.Println(config)
 
 	sqltrace.Register(env.DB_KIND, &sqlserver.Driver{}, sqltrace.WithServiceName("apm-trace-with-gin-gonic-example-db"), sqltrace.WithAnalytics(true))
