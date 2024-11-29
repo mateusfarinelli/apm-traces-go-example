@@ -7,6 +7,8 @@ import (
 	"apm-trace-worker-example/interfaces"
 	"context"
 	"fmt"
+
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 type Worker struct {
@@ -24,6 +26,7 @@ func (wk *Worker) BootStrap() error {
 		fmt.Println("Erro ao iniciar conexão com banco de dados")
 		return err
 	}
+	wk.InitiInternalModules()
 
 	fmt.Println("Conexão iniciada com sucesso!")
 	return nil
@@ -44,7 +47,10 @@ func (wk *Worker) InitiInternalModules() {
 }
 
 func (wk *Worker) Exec() {
-	ctx := context.Background()
+	span, ctx := tracer.StartSpanFromContext(context.Background(), "worker.exec")
+	span.SetTag("tag", "teste")
+	defer span.Finish()
+
 	products, err := wk.productUseCase.GetProducts(ctx)
 
 	if err != nil {

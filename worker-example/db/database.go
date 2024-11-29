@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	server = "localhost"
+	server = "DESKTOP-46TK3U5"
 	port   = "1433"
 	table  = "product"
 )
